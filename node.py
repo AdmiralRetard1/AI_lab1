@@ -2,11 +2,11 @@
 class Node(object):
 
     # function to enter layout with checking it for uniqueness and fullness
-    def __init__(self, new_layout, old_layout=0, level=0):
+    def __init__(self, new_layout, old_node=None, level=0):
         self.layout = new_layout
         self.level = level
         # cost to move 1 tile compared to previous layout
-        self.wayCost = count_cost(old_layout, new_layout) if old_layout != 0 else 0
+        self.wayCost = count_cost(old_node, new_layout) if old_node else 0
 
     # function to print layout
     def __repr__(self):
@@ -30,8 +30,8 @@ class NodeList(list):
 
 
 # function that return the value of tile in new layout that was moved on empty position
-def count_cost(old_layout, new_layout):
-    return new_layout[old_layout.index(" ")]
+def count_cost(old_node, new_layout):
+    return int(new_layout[old_node.layout.index(" ")]) + old_node.wayCost
 
 
 # function to check correctness of input

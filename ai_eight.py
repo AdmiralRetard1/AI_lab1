@@ -19,9 +19,18 @@ def menu():
 
 # universal func to print our lists without braces
 def printlist(lst):
+    lines = ["", "", ""]
+    res = ""
     if lst:
         for n in lst:
-            print(n)
+            lines[0] += "  " + n.layout[:3]
+            lines[1] += "  " + n.layout[3:6]
+            lines[2] += "  " + n.layout[6:]
+            if len(lines[0]) % 100 == 0:
+                res += "\n".join(lines) + "\n\n"
+                lines = ["", "", ""]
+        res += "\n".join(lines)
+        print(res)
     else:
         print("Empty list")
 
@@ -65,7 +74,7 @@ def find_solution(start, target):
 
             # move tile
             new_layout[i], new_layout[pos] = new_layout[pos], new_layout[i]
-            new_node = node.Node("".join(ch for ch in new_layout), next_node.layout, next_node.level + 1)
+            new_node = node.Node("".join(ch for ch in new_layout), next_node, next_node.level + 1)
 
             # checking newly created node
             if new_node in solution:  # if we already have this node
@@ -106,8 +115,7 @@ def find_solution(start, target):
     # if solved, print solution
     if solved:
         print("Solution :")
-        for n in solution:
-            print(n)
+        printlist(solution)
         print("Time of execution: ", time.time() - start_time, "Generated nodes: ",
               len(solution) + len(nodes_to_expand) + len(bad_nodes))
 
