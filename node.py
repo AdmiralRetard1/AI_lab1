@@ -1,3 +1,5 @@
+import math
+
 # class for node
 class Node(object):
 
@@ -6,7 +8,7 @@ class Node(object):
         self.layout = new_layout
         self.level = level
         # cost to move 1 tile compared to previous layout
-        self.wayCost = count_cost(old_node, new_layout) if old_node else 0
+        self.wayCost = count_cost(old_node, new_layout) if old_node else level
 
     # function to print layout
     def __repr__(self):
@@ -58,3 +60,30 @@ def input_layout(message):
                     layout += " "
                 break
     return layout
+
+
+# universal func to print our lists without braces
+def printlist(lst):
+    lines = ["", "", "", ""]
+    res = ""
+    if lst:
+        nodeCounter = 0
+        for n in lst:
+            digits = getCountOfDigits(n.wayCost)
+            lines[0] += n.layout[:3] + " "*(digits + 1)
+            lines[1] += n.layout[3:6] + " "*(digits + 1)
+            lines[2] += n.layout[6:] + " "*(digits + 1)
+            lines[3] += "w:{}".format(n.wayCost) + " "*2
+            nodeCounter += 1
+            if nodeCounter == 30:
+                res += "\n".join(lines) + "\n\n"
+                lines = ["", "", "", ""]
+                nodeCounter = 0
+        res += "\n".join(lines)
+        print(res)
+    else:
+        print("Empty list")
+
+
+def getCountOfDigits(number):
+    return 1 if number == 1 else round(math.log10(number) + 0.5)
