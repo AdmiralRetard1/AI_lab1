@@ -12,4 +12,4 @@ print("2 - Consider the way cost")
 if input() == "1":
     algorithms.find_solution_depth(start_node, target_node)
 else:
-    algorithms.find_solution_weigth(start_node, target_node)
+    algorithms.find_solution_weight(start_node, target_node)

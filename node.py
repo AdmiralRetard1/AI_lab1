@@ -1,5 +1,6 @@
 import math
 
+
 # class for node
 class Node(object):
 
@@ -9,6 +10,7 @@ class Node(object):
         self.level = level
         # cost to move 1 tile compared to previous layout
         self.wayCost = count_cost(old_node, new_layout) if old_node else level
+        self.prev_node_layout = old_node.layout if old_node else None
 
     # function to print layout
     def __repr__(self):
@@ -70,10 +72,10 @@ def printlist(lst):
         nodeCounter = 0
         for n in lst:
             digits = getCountOfDigits(n.wayCost)
-            lines[0] += n.layout[:3] + " "*(digits + 1)
-            lines[1] += n.layout[3:6] + " "*(digits + 1)
-            lines[2] += n.layout[6:] + " "*(digits + 1)
-            lines[3] += "w:{}".format(n.wayCost) + " "*2
+            lines[0] += n.layout[:3] + " " * (digits + 1)
+            lines[1] += n.layout[3:6] + " " * (digits + 1)
+            lines[2] += n.layout[6:] + " " * (digits + 1)
+            lines[3] += "w:{}".format(n.wayCost) + " " * 2
             nodeCounter += 1
             if nodeCounter == 30:
                 res += "\n".join(lines) + "\n\n"
@@ -86,4 +88,4 @@ def printlist(lst):
 
 
 def getCountOfDigits(number):
-    return 1 if number == 1 else round(math.log10(number) + 0.5)
+    return 1 if number == 1 or number == 0 else round(math.log10(number) + 0.5)
