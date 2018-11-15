@@ -5,18 +5,23 @@ import math
 class Node(object):
 
     # function to enter layout with checking it for uniqueness and fullness
-    def __init__(self, new_layout, old_node=None, level=0):
+    def __init__(self, new_layout, old_node_layout=None, wayCost=0, level=0):
         self.layout = new_layout
         self.level = level
         # cost to move 1 tile compared to previous layout
-        self.wayCost = count_cost(old_node, new_layout) if old_node else level
-        self.prev_node_layout = old_node.layout if old_node else None
+        self.wayCost = wayCost if wayCost else level
+        self.prev_node_layout = old_node_layout if old_node_layout else None
 
     # function to print layout
     def __repr__(self):
         r_val = ""
+        layout = [chr(n+48) for n in make_list_layout(self.layout)]
+        if "0" in layout:
+            layout[layout.index("0")] = " "
+        else:
+            layout = [" "] + layout
         for i in [0, 3, 6]:
-            r_val += "\n" + ("".join(self.layout[i] + self.layout[i + 1] + self.layout[i + 2]))
+            r_val += "\n" + ("".join(layout[i] + layout[i + 1] + layout[i + 2]))
         return r_val
 
     # redefined equality function
@@ -33,10 +38,8 @@ class NodeList(list):
         return key.layout in layouts
 
 
-# function that return the value of tile in new layout that was moved on empty position
-def count_cost(old_node, new_layout):
-    return int(new_layout[old_node.layout.index(" ")]) + old_node.wayCost
-
+def make_list_layout(number):
+    return [number // 10**n % 10 for n in range(getCountOfDigits(number)-1, -1, -1)]
 
 # function to check correctness of input
 def input_layout(message):
@@ -59,27 +62,61 @@ def input_layout(message):
             # to fill it with space
             if legal:
                 if len(layout) == 8:
-                    layout += " "
+                    layout += "0"
+                else:
+                    layout = list(layout)
+                    layout[layout.index(" ")] = "0"
                 break
-    return layout
+    return int("".join(layout))
 
 
-# universal func to print our lists without braces
-def printlist(lst):
+# universal func to print our lists of nodes without braces
+def print_nodes(lst):
     lines = ["", "", "", ""]
     res = ""
     if lst:
         nodeCounter = 0
         for n in lst:
+            layout = [chr(n+48) for n in make_list_layout(n.layout)]
+            if "0" in layout:
+                layout[layout.index("0")] = " "
+            else:
+                layout = [" "] + layout
             digits = getCountOfDigits(n.wayCost)
-            lines[0] += n.layout[:3] + " " * (digits + 1)
-            lines[1] += n.layout[3:6] + " " * (digits + 1)
-            lines[2] += n.layout[6:] + " " * (digits + 1)
+            lines[0] += "".join(layout[:3]) + " " * (digits + 1)
+            lines[1] += "".join(layout[3:6]) + " " * (digits + 1)
+            lines[2] += "".join(layout[6:]) + " " * (digits + 1)
             lines[3] += "w:{}".format(n.wayCost) + " " * 2
             nodeCounter += 1
             if nodeCounter == 30:
                 res += "\n".join(lines) + "\n\n"
                 lines = ["", "", "", ""]
+                nodeCounter = 0
+        res += "\n".join(lines)
+        print(res)
+    else:
+        print("Empty list")
+
+
+# function to print list of repeating nodes
+def print_list(lst):
+    lines = ["", "", ""]
+    res = ""
+    if lst:
+        nodeCounter = 0
+        for n in lst:
+            layout = [chr(ch+48) for ch in make_list_layout(n)]
+            if "0" in layout:
+                layout[layout.index("0")] = " "
+            else:
+                layout = [" "] + layout
+            lines[0] += "".join(layout[:3]) + "  "
+            lines[1] += "".join(layout[3:6]) + "  "
+            lines[2] += "".join(layout[6:]) + "  "
+            nodeCounter += 1
+            if nodeCounter == 30:
+                res += "\n".join(lines) + "\n\n"
+                lines = ["", "", ""]
                 nodeCounter = 0
         res += "\n".join(lines)
         print(res)
