@@ -4,7 +4,7 @@ import math
 # class for node
 class Node(object):
 
-    # function to enter layout with checking it for uniqueness and fullness
+    # constructor
     def __init__(self, new_layout, old_node_layout=None, wayCost=0, level=0):
         self.layout = new_layout
         self.level = level
@@ -15,7 +15,7 @@ class Node(object):
     # function to print layout
     def __repr__(self):
         r_val = ""
-        layout = [chr(n+48) for n in make_list_layout(self.layout)]
+        layout = [chr(n + 48) for n in make_list_layout(self.layout)]
         if "0" in layout:
             layout[layout.index("0")] = " "
         else:
@@ -38,10 +38,12 @@ class NodeList(list):
         return key.layout in layouts
 
 
+# fast way to convert int to list
 def make_list_layout(number):
-    return [number // 10**n % 10 for n in range(getCountOfDigits(number)-1, -1, -1)]
+    return [number // 10 ** n % 10 for n in range(getCountOfDigits(number) - 1, -1, -1)]
 
-# function to check correctness of input
+
+# function to enter layout with checking it for uniqueness and fullness
 def input_layout(message):
     while True:
         layout = input(message)
@@ -77,7 +79,7 @@ def print_nodes(lst):
     if lst:
         nodeCounter = 0
         for n in lst:
-            layout = [chr(n+48) for n in make_list_layout(n.layout)]
+            layout = [chr(n + 48) for n in make_list_layout(n.layout)]
             if "0" in layout:
                 layout[layout.index("0")] = " "
             else:
@@ -98,14 +100,14 @@ def print_nodes(lst):
         print("Empty list")
 
 
-# function to print list of repeating nodes
+# function to print list of nodes without wayCost
 def print_list(lst):
     lines = ["", "", ""]
     res = ""
     if lst:
         nodeCounter = 0
         for n in lst:
-            layout = [chr(ch+48) for ch in make_list_layout(n)]
+            layout = [chr(ch + 48) for ch in make_list_layout(n)]
             if "0" in layout:
                 layout[layout.index("0")] = " "
             else:
@@ -124,5 +126,6 @@ def print_list(lst):
         print("Empty list")
 
 
+# fast way to count amount of digits in a number
 def getCountOfDigits(number):
     return 1 if number == 1 or number == 0 else round(math.log10(number) + 0.5)
