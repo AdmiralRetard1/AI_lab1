@@ -1,8 +1,6 @@
 from operator import attrgetter
 import time
 import node
-import math
-
 
 # menu output
 def menu():
@@ -19,7 +17,7 @@ def menu():
     return pressed_key
 
 
-# function to
+# function to convert list to int
 def make_number(layout):
     i = 0
     res = 0
@@ -33,10 +31,10 @@ def find_solution_depth(start, target):
     # NodeList - custom expansion of list class
     nodes_to_expand = node.NodeList()  # border state
     solution = node.NodeList()  # current solution state
-    solution_layouts = list()
+    solution_layouts = list()  # only layouts of solution, because it's faster to iterate over list of lists
     bad_nodes = list()  # repeating nodes
     nodes_to_expand.append(start)
-    nodes_to_expand_layouts = [start.layout]
+    nodes_to_expand_layouts = [start.layout]  # only layouts of border
     counter = 0  # loop counter
     no_solution = False
     solved = False
@@ -90,7 +88,7 @@ def find_solution_depth(start, target):
                 # move tile
                 new_layout[i], new_layout[pos] = new_layout[pos], new_layout[i]
 
-                # depending on the chosen way to solve, choose constructor for node
+                # create new node based on new layout
                 new_node = node.Node(make_number(new_layout), level=next_node.level + 1)
 
                 # checking newly created node
@@ -102,8 +100,8 @@ def find_solution_depth(start, target):
                 elif new_node.layout not in nodes_to_expand_layouts and new_node.layout not in bad_nodes:
                     temp = [new_node] + temp
 
-
-            if temp:  # if we found some new nodes
+            # if we found some new nodes
+            if temp:
                 for n in temp:
                     if n == target:
                         solution.append(n)
@@ -149,9 +147,9 @@ def find_solution_weight(start, target):
     # NodeList - custom expansion of list class
     nodes_to_expand = node.NodeList()  # border state
     all_solutions = node.NodeList()  # current solution state
-    all_solutions_layouts = list()
+    all_solutions_layouts = list()  # list of all solutions layouts, faster to iterate than list of objects
     bad_nodes = list()  # repeating nodes
-    solution = node.NodeList()
+    solution = node.NodeList()  # solution that we build in the end
     nodes_to_expand.append(start)
     nodes_to_expand_layouts = [start.layout]
     counter = 0  # loop counter
@@ -208,7 +206,7 @@ def find_solution_weight(start, target):
                 # move tile
                 new_layout[i], new_layout[pos] = new_layout[pos], new_layout[i]
 
-                # depending on the chosen way to solve, choose constructor for node
+                # create new node based on new layout
                 new_node = node.Node(make_number(new_layout), old_node_layout=next_node.layout,
                                      wayCost=next_node.wayCost+new_layout[pos], level=next_node.level + 1)
 
